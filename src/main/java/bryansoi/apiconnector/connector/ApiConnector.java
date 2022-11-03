@@ -1,8 +1,11 @@
 package bryansoi.apiconnector.connector;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
+@Configuration
 public class ApiConnector {
 
     private final RestTemplate restTemplate;
@@ -24,17 +28,26 @@ public class ApiConnector {
         this.restTemplate = restTemplate;
     }
 
+//    private MultiValueMap<String, String> queryParams;
+//    private MultiValueMap<String, String> headerParams;
+//    private MultiValueMap<String, String> body;
 
-    // 함수 이름, return type 미정
-    public String request(
-            String url ,
+
+    /*
+    * return type 미정
+    * body, headerParams Nullable 하게 수정 필요
+    * httpMethod 분기 필요
+    * */
+    String connect(
+            String httpMethod,
+            String BaseUrl ,
             MultiValueMap<String, String> queryParams,
             MultiValueMap<String, String> headerParams,
             MultiValueMap<String, String> body) {
 
 
         // Uri Build
-        UriComponents uri = UriComponentsBuilder.fromHttpUrl(url)
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(BaseUrl)
                 .queryParams(queryParams)
                 .encode()
                 .build();
@@ -42,10 +55,14 @@ public class ApiConnector {
         System.out.println("uri = " + uri.toString());
 
 
+
         // Header Build
         HttpHeaders headers = new HttpHeaders();
-        for (String headerName : headerParams.keySet()) {
-            headers.add(headerName, headerParams.getFirst(headerName));
+
+        if (!headerParams.isEmpty()) {
+            for (String headerName : headerParams.keySet()) {
+                headers.add(headerName, headerParams.getFirst(headerName));
+            }
         }
 
 
@@ -60,7 +77,12 @@ public class ApiConnector {
         ResponseEntity<Map> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, Map.class);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String result = objectMapper.writeValueAsString(resultMap.getBody());
+        String result = null;
+        try {
+            result = objectMapper.writeValueAsString(resultMap.getBody());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
         // 대충 string 으로 구현하였으나 객체로 만들 예정
         return result;
