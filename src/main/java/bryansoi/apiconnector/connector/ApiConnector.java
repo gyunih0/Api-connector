@@ -1,8 +1,7 @@
 package bryansoi.apiconnector.connector;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +26,7 @@ import java.util.Map;
 public class ApiConnector {
 
     @Value("${apiConnector.responseType}")
-    String responseType = "JSON";
+    String responseType = "JSON";  // default
 
     private MultiValueMap<String, String> query = new LinkedMultiValueMap<>();
     private MultiValueMap<String, String> header = new LinkedMultiValueMap<>();
@@ -71,9 +70,7 @@ public class ApiConnector {
 
 
     // Api 호출 method
-    public String connect(
-            String httpMethod,
-            String BaseUrl) {
+    public String connect(String httpMethod, String BaseUrl) {
 
         System.out.println("value: " + responseType);
 
@@ -101,27 +98,37 @@ public class ApiConnector {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
 
-
         /*
         RestTemplate
-        Response Type 미정
+        Response Type 미정, 현재 Json형식의 String
          */
-        ResponseEntity<Map> resultMap = restTemplate.exchange(uri.toString(), methodSelector(httpMethod), entity, Map.class);
+        String json = "";
+        ResponseEntity<String> resultMap = restTemplate.exchange(uri.toString(), methodSelector(httpMethod), entity, String.class);
+        if (responseType.equals("XML")) {
+            json = XML.toJSONObject(resultMap.getBody()).toString();
+        }
+        else {
+            json = resultMap.getBody();
+        }
+
 
         System.out.println("resultMap.getStatusCode() = " + resultMap.getStatusCode());
         System.out.println("resultMap.getHeaders() = " + resultMap.getHeaders());
-        System.out.println("resultMap.getBody() = " + resultMap.getBody());
+        System.out.println("resultMap.getBody() = " + json);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String result = null;
-        try {
-            result = objectMapper.writeValueAsString(resultMap.getBody());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+//        ObjectMapper objectMapper = new ObjectMapper();
 
-        // 대충 string 으로 구현하였으나 객체로 만들 예정 --> 불가능한듯
-        return result;
+        return json;
+
+//        String result = null;
+//        try {
+//            result = objectMapper.writeValueAsString(resultMap.getBody());
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // 대충 string 으로 구현하였으나 객체로 만들 예정 --> 불가능한듯
+//        return result;
     }
 
 }

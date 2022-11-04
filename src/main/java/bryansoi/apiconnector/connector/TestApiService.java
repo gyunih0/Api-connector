@@ -10,12 +10,6 @@ import org.springframework.util.MultiValueMap;
 @Service
 public class TestApiService {
 
-    public MultiValueMap<String, String> headerParams = new LinkedMultiValueMap<>();
-
-    public MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-    public MultiValueMap<String, String> bodyParams = new LinkedMultiValueMap<>();
-
-    private final String baseUrl = "https://openapi.naver.com/v1/search/encyc.json";
 
     private final ApiConnector apiConnector;
 
@@ -26,10 +20,10 @@ public class TestApiService {
 
     public String naverTest(String testData) {
 
+        String baseUrl = "https://openapi.naver.com/v1/search/encyc.json";
+
         apiConnector.addHeader("X-Naver-Client-Id", "5wqt9i_rAwIjYlmy86Dn");
         apiConnector.addHeader("X-Naver-Client-Secret", "pCEUZRNYUW");
-
-
         apiConnector.addQuery("query", testData);
         apiConnector.addQuery("display", "10");
 

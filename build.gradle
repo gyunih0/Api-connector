@@ -27,6 +27,9 @@ dependencies {
 
     // httpClient
     implementation('org.apache.httpcomponents:httpclient')
+
+    //JsonObject
+    implementation 'org.json:json:20211205'
 }
 
 tasks.named('test') {
