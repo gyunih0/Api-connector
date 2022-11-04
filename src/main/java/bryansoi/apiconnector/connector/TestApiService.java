@@ -2,6 +2,7 @@ package bryansoi.apiconnector.connector;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,14 +26,15 @@ public class TestApiService {
 
     public String naverTest(String testData) {
 
-        headerParams.add("X-Naver-Client-Id", "5wqt9i_rAwIjYlmy86Dn");
-        headerParams.add("X-Naver-Client-Secret", "pCEUZRNYUW");
-
-        queryParams.add("query", testData);
-        queryParams.add("display", "10");
+        apiConnector.addHeader("X-Naver-Client-Id", "5wqt9i_rAwIjYlmy86Dn");
+        apiConnector.addHeader("X-Naver-Client-Secret", "pCEUZRNYUW");
 
 
-        String response = apiConnector.connect("get", baseUrl, queryParams, headerParams, bodyParams);
+        apiConnector.addQuery("query", testData);
+        apiConnector.addQuery("display", "10");
+
+
+        String response = apiConnector.connect("get", baseUrl);
 
         return response;
     }

@@ -1,5 +1,6 @@
 package bryansoi.apiconnector.config;
 
+import bryansoi.apiconnector.connector.ApiConnector;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.context.annotation.Bean;
@@ -8,10 +9,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 
-
 @Configuration
-public class
-RestTemplateConfig {
+public class ApiConnectorConfig {
 
     @Bean
     HttpClient httpClient() {
@@ -35,5 +34,11 @@ RestTemplateConfig {
     RestTemplate restTemplate(HttpComponentsClientHttpRequestFactory factory) {
         return new RestTemplate(factory);
     }
+
+//    @Bean
+//    ApiConnector apiConnector() {
+//        return new ApiConnector(restTemplate(factory(httpClient())));
+//    }
+
 }
 
