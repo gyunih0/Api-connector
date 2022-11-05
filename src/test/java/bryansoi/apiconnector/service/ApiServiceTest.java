@@ -54,7 +54,7 @@ class ApiServiceTest {
 
         param.put("query", Collections.singletonList(("search")));
 
-        System.out.println(connector.process(naverSearchUrl, "GET",header, param, body));
+        System.out.println(connector.process(naverSearchUrl, methodType, header, param, body));
 
     }
 }
