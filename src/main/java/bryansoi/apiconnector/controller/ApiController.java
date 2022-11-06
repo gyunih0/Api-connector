@@ -26,12 +26,9 @@ public class ApiController {
     }
 
     @PostMapping("/request")
-    public String getRequest(@RequestBody  Map<String, Object> test){
-
-        for (Map.Entry<String, Object> obj : test.entrySet()) {
-            System.out.println(obj.getKey() + " / " + obj.getValue() );
-        }
-
+    public String getRequest(@RequestBody Map<String, Object> test) {
+        // 들어오는 값들의 type을 받도록 규정하자
+        apiService.processRequestBody(test);
         return "GODO";
     }
 }

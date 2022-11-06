@@ -21,4 +21,12 @@ public class ApiService {
         ResponseEntity<String> process = connector.process(url, method,header, queryParams, body);
         return process.getBody();
     }
+
+    public void processRequestBody(Map<String, Object> test) {
+        String type = (String) test.get("type");
+        for (Map.Entry<String, Object> obj : test.entrySet()) {
+            System.out.println(obj.getKey() + " / " + obj.getValue());
+        }
+
+    }
 }
