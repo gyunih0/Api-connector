@@ -16,16 +16,24 @@ import java.util.Map;
 @Slf4j
 public class ApiService {
     private final Connector connector;
+
     public String connect(String url, String method, Map<String, String> header,
-                        MultiValueMap<String, String> queryParams, MultiValueMap<String, String> body) {
-        ResponseEntity<String> process = connector.process(url, method,header, queryParams, body);
+                          MultiValueMap<String, String> queryParams, MultiValueMap<String, String> body) {
+        ResponseEntity<String> process = connector.process(url, method, header, queryParams, body);
         return process.getBody();
     }
 
     public void processRequestBody(Map<String, Object> test) {
-        String type = (String) test.get("type");
+        String apiType = (String) test.get("type"); // API Type
+        log.info("api type : {}", apiType);
         for (Map.Entry<String, Object> obj : test.entrySet()) {
-            System.out.println(obj.getKey() + " / " + obj.getValue());
+            Object target = obj.getValue();
+            String key = obj.getKey();
+            Class<?> classType = target.getClass();
+            log.info("{} / {} / {}", key, target, classType);
+            // TODO 타입으로 형 선언해서 Request 만들기
+
+
         }
 
     }
